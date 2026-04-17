@@ -29,16 +29,16 @@ jobs:
       - name: Set Yarn version
         run: |
           corepack prepare yarn@${{ matrix.yarn-version }} --activate
-          yarn -v
+          corepack yarn -v
 
       # ✅ Ensure compatibility (important for Yarn 2/3)
       - name: Configure nodeLinker
         run: |
           echo "nodeLinker: node-modules" >> .yarnrc.yml
 
-      # ✅ Install dependencies
+      # ✅ Initial install (use corepack yarn)
       - name: Initial install
-        run: yarn install
+        run: corepack yarn install
 
       # ✅ Remove dependencies
       - name: Remove node_modules (Linux/macOS)
@@ -52,7 +52,7 @@ jobs:
 
       # ✅ Clean cache
       - name: Clean Yarn cache
-        run: yarn cache clean --all
+        run: corepack yarn cache clean --all
 
       # ✅ Setup Node with cache
       - name: Setup Node with Yarn cache
@@ -63,14 +63,14 @@ jobs:
 
       # ✅ Reinstall
       - name: Reinstall dependencies
-        run: yarn install
+        run: corepack yarn install
 
       # ✅ Immutable check (non-blocking)
       - name: Immutable install
-        run: yarn install --immutable || true
+        run: corepack yarn install --immutable || true
 
       # ✅ Debug info
       - name: Debug versions
         run: |
           node -v
-          yarn -v
+          corepack yarn -v
