@@ -1,0 +1,54 @@
+name: Test Yarn 1 Compatibility
+
+on: [push, pull_request]
+
+jobs:
+  test-yarn-v1:
+    name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Note: macos-latest-large is for GitHub Team/Enterprise accounts
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [20, 22] # Removed 24 as it is not currently an LTS release
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Yarn version
+        run: yarn --version
+      - name: Generate yarn file
+        run: yarn install --ignore-engines
+      - name: Remove dependencies
+        shell: pwsh
+        run: Remove-Item node_modules -Force -Recurse
+      - name: Clean global cache
+        run: yarn cache clean
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --ignore-engines
+
+      - name: Verify Environment
+        shell: bash
+        run: |
+          echo "Checking Node version..."
+          NODE_VER=$(node -v)
+          if [[ $NODE_VER != v${{ matrix.node-version }}* ]]; then
+            echo "Error: Expected Node ${{ matrix.node-version }}, but found $NODE_VER"
+            exit 1
+          fi
+          
+          echo "Checking Yarn version..."
+          YARN_VER=$(yarn -version)
+          echo "Found Yarn $YARN_VER"
+          if [[ $YARN_VER != 1.* ]]; then
+            echo "Error: Yarn is not version 1.x"
+            exit 1
+          fi
+          echo "Environment verified successfully!"
