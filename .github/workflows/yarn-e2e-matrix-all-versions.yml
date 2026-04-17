@@ -19,7 +19,7 @@ jobs:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       # ✅ Enable Corepack
       - name: Enable Corepack
