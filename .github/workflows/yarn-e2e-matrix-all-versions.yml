@@ -1,0 +1,76 @@
+name: yarn-e2e-matrix-all-versions
+
+on:
+  workflow_dispatch:
+
+jobs:
+  yarn-tests:
+    name: Yarn ${{ matrix.yarn-version }} (Node ${{ matrix.node-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [20, 22, 24]
+        yarn-version: [2.4.3, 3.6.4, 4.1.1] # representative versions
+
+    env:
+      YARN_ENABLE_IMMUTABLE_INSTALLS: false
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # ✅ Enable Corepack
+      - name: Enable Corepack
+        run: corepack enable
+
+      # ✅ Force specific Yarn version (independent of repo)
+      - name: Set Yarn version
+        run: |
+          corepack prepare yarn@${{ matrix.yarn-version }} --activate
+          yarn -v
+
+      # ✅ Ensure compatibility (important for Yarn 2/3)
+      - name: Configure nodeLinker
+        run: |
+          echo "nodeLinker: node-modules" >> .yarnrc.yml
+
+      # ✅ Install dependencies
+      - name: Initial install
+        run: yarn install
+
+      # ✅ Remove dependencies
+      - name: Remove node_modules (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: rm -rf node_modules
+
+      - name: Remove node_modules (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Remove-Item node_modules -Force -Recurse
+
+      # ✅ Clean cache
+      - name: Clean Yarn cache
+        run: yarn cache clean --all
+
+      # ✅ Setup Node with cache
+      - name: Setup Node with Yarn cache
+        uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      # ✅ Reinstall
+      - name: Reinstall dependencies
+        run: yarn install
+
+      # ✅ Immutable check (non-blocking)
+      - name: Immutable install
+        run: yarn install --immutable || true
+
+      # ✅ Debug info
+      - name: Debug versions
+        run: |
+          node -v
+          yarn -v
