@@ -1,6 +1,6 @@
 {
   "name": "yarn-ci-test",
-  "packageManager": "yarn@4.14.0",
+  "packageManager": "yarn@3.8.7",
   "scripts": {
     "build": "echo 'Add your build command here'",
     "test": "echo 'Add your test command here'"
