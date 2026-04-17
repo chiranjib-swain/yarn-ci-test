@@ -1,0 +1,166 @@
+name: yarn-subprojects-all-scenarios
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  # ✅ 1. Mixed Yarn (root + subprojects)
+  yarn-subprojects:
+    name: Yarn subprojects (mixed)
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22, 24]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Prepare sub-projects (mixed)
+        run: |
+          set -e
+          export YARN_ENABLE_IMMUTABLE_INSTALLS=false
+
+          rm -f package.json package-lock.json || true
+
+          mkdir sub2
+          cd sub2
+          echo '{"name":"sub2","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
+          corepack enable
+          yarn set version 2.4.3
+          yarn install
+
+          cd ..
+          mkdir sub3
+          cd sub3
+          echo '{"name":"sub3","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
+          yarn set version 3.5.1
+          yarn install
+
+          cd ..
+          rm -rf sub2/.yarn/cache sub3/.yarn/cache
+
+          echo '{"name":"root","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
+          yarn set version 1.22.19
+          yarn install
+
+      - name: Setup Node
+        uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+          cache-dependency-path: |
+            **/*.lock
+            yarn.lock
+
+  # ✅ 2. All locally managed (Berry local)
+  yarn-subprojects-berry-local:
+    name: Yarn subprojects (berry local)
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Prepare sub-projects (keep cache)
+        run: |
+          set -e
+          export YARN_ENABLE_IMMUTABLE_INSTALLS=false
+
+          mkdir sub2
+          cd sub2
+          echo '{"name":"sub2","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
+          corepack enable
+          yarn set version 3.5.1
+          yarn install
+
+          cd ..
+          mkdir sub3
+          cd sub3
+          echo '{"name":"sub3","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
+          yarn set version 3.5.1
+          yarn install
+
+      - name: Setup Node
+        uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+          cache-dependency-path: |
+            sub2/*.lock
+            sub3/*.lock
+
+  # ✅ 3. Mixed local + global cache
+  yarn-subprojects-berry-global:
+    name: Yarn subprojects (berry global)
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Prepare sub-projects (global cache)
+        run: |
+          set -e
+
+          mkdir sub2
+          cd sub2
+          echo '{"name":"sub2","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
+          corepack enable
+          yarn set version 3.5.1
+          yarn install
+
+          cd ..
+          mkdir sub3
+          cd sub3
+          echo '{"name":"sub3","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
+          yarn set version 3.5.1
+          echo "enableGlobalCache: true" >> .yarnrc.yml
+          yarn install
+
+      - name: Setup Node
+        uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+          cache-dependency-path: |
+            sub2/*.lock
+            sub3/*.lock
+
+  # ✅ 4. Git-managed cache (.yarn/cache present)
+  yarn-subprojects-berry-git:
+    name: Yarn subprojects (berry git cache)
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Prepare sub-projects (git cache)
+        run: |
+          set -e
+
+          mkdir sub2
+          cd sub2
+          echo '{"name":"sub2","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
+          corepack enable
+          yarn set version 3.5.1
+          yarn install
+
+          cd ..
+          mkdir sub3
+          cd sub3
+          echo '{"name":"sub3","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
+          yarn set version 3.5.1
+          yarn install
