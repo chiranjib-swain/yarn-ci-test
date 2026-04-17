@@ -83,7 +83,7 @@ jobs:
           corepack enable
           yarn set version 3.5.1
           touch yarn.lock
-          yarn install
+          yarn install --no-immutable
 
           cd ..
           mkdir sub3
@@ -91,7 +91,7 @@ jobs:
           echo '{"name":"sub3","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
           yarn set version 3.5.1
           touch yarn.lock
-          yarn install
+          yarn install --no-immutable
 
       - name: Setup Node
         uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
@@ -124,7 +124,7 @@ jobs:
           corepack enable
           yarn set version 3.5.1
           touch yarn.lock
-          yarn install
+          yarn install --no-immutable
 
           cd ..
           mkdir sub3
@@ -133,7 +133,7 @@ jobs:
           yarn set version 3.5.1
           echo "enableGlobalCache: true" >> .yarnrc.yml
           touch yarn.lock
-          yarn install
+          yarn install --no-immutable
 
       - name: Setup Node
         uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
@@ -166,7 +166,7 @@ jobs:
           corepack enable
           yarn set version 3.5.1
           touch yarn.lock
-          yarn install
+          yarn install --no-immutable
 
           cd ..
           mkdir sub3
@@ -174,7 +174,7 @@ jobs:
           echo '{"name":"sub3","dependencies":{"random":"^3.0.6","uuid":"^9.0.0"}}' > package.json
           yarn set version 3.5.1
           touch yarn.lock
-          yarn install
+          yarn install --no-immutable
 
       - name: Setup Node
         uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
