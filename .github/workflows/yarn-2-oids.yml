@@ -64,13 +64,10 @@ jobs:
           echo "Publishing version: $NEW_VERSION"
           npm version "$NEW_VERSION" --no-git-tag-version
 
-      # ✅ Bridge auth for Yarn
-    #   - name: Configure Yarn auth
-    #     env:
-    #         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    #     run: |
-    #         echo "npmAuthToken: ${NPM_TOKEN}" >> .yarnrc.yml
 
       # ✅ Publish using Yarn (OIDC works via setup-node)
-      - name: Publish to npm (OIDC)
-        run: yarn npm publish
+      - name: Publish to npm
+        env:
+         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+         yarn npm publish --access public
