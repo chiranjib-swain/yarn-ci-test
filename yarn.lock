@@ -2,8 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 8
-  cacheKey: 10
+  version: 6
 
 "@chiranjib-infosys/yarn-ci-test@workspace:.":
   version: 0.0.0-use.local

@@ -18,11 +18,11 @@ jobs:
     steps:
       # ✅ Checkout
       - uses: actions/checkout@v4
-      # ✅ Enable Corepack + Yarn 4
+      # ✅ Enable Corepack + Yarn 3
       - name: Setup Yarn
         run: |
           corepack enable
-          corepack prepare yarn@4.1.1 --activate
+          corepack prepare yarn@3.6.4 --activate
           yarn -v
 
      # ✅ Ensure Yarn uses npm registry (safe)
@@ -73,4 +73,4 @@ jobs:
 
       # ✅ Publish using Yarn (OIDC works via setup-node)
       - name: Publish to npm (OIDC)
-        run: npm publish --provenance
+        run: yarn npm publish
