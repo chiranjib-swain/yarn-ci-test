@@ -65,9 +65,11 @@ jobs:
 
       # ✅ Bridge auth for Yarn
       - name: Configure Yarn auth
+        env:
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-         echo "npmAuthToken: \${secrets.NPM_TOKEN}" >> .yarnrc.yml
+            echo "npmAuthToken: ${NPM_TOKEN}" >> .yarnrc.yml
 
       # ✅ Publish using Yarn (OIDC works via setup-node)
       - name: Publish to npm (OIDC)
-        run: yarn npm publish 
+        run: yarn npm publish --provenance
