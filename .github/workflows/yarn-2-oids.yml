@@ -1,7 +1,8 @@
-name: Yarn OIDC Publish 
+name: Yarn OIDC Publish
 
 on:
   workflow_dispatch:
+
 permissions:
   contents: read
   id-token: write
@@ -15,30 +16,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      # ✅ Checkout
+      - uses: actions/checkout@v4
 
-      - name: Enable Corepack + activate Yarn
-        run: |
-           corepack enable
-           corepack prepare yarn@4.1.1 --activate
-
-      - name: Setup Node
-        uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
+      # ✅ Setup Node (OIDC + registry)
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
-          cache: "yarn"
+          cache: yarn
+
+      # ✅ Enable Corepack + Yarn 4
+      - name: Setup Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@4.1.1 --activate
+          yarn -v
 
 
-      - name: Install dependencies
-        run: yarn install --immutable
+      # ✅ Install
+      - run: yarn install --immutable
 
-      - name: Build (if present)
-        run: yarn build
+      # ✅ Optional build
+      - run: yarn build
         continue-on-error: true
 
-      - name: Publish to npm
-        # env:
-        #     YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # ✅ Get current version from npm (IMPORTANT FIX)
+      - name: Get current npm version
+        run: |
+          PKG_NAME=$(node -p "require('./package.json').name")
+          CURRENT_VERSION=$(npm view $PKG_NAME version || echo "0.0.0")
+          echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+
+      # ✅ Bump version (npm only)
+      - name: Bump version
+        run: |
+          NEW_VERSION=$(node -e "
+            const v = process.env.CURRENT_VERSION.split('.');
+            v[2] = Number(v[2]) + 1;
+            console.log(v.join('.'));
+          ")
+          echo "Publishing version: $NEW_VERSION"
+          npm version "$NEW_VERSION" --no-git-tag-version
+
+      # ✅ Publish using Yarn (OIDC works via setup-node)
+      - name: Publish to npm (OIDC)
         run: yarn npm publish --access public
