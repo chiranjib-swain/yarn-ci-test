@@ -17,6 +17,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Enable Corepack + activate Yarn
+        run: |
+           corepack enable
+           corepack prepare yarn@4.1.1 --activate
+
       - name: Setup Node
         uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
         with:
@@ -24,10 +29,6 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "yarn"
 
-      - name: Enable Corepack + activate Yarn
-        run: |
-           corepack enable
-           corepack prepare yarn@4.1.1 --activate
 
       - name: Install dependencies
         run: yarn install --immutable
