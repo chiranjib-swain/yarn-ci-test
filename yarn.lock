@@ -5,8 +5,8 @@ __metadata:
   version: 8
   cacheKey: 10
 
-"yarn-ci-test@workspace:.":
+"@chiranjib-infosys/yarn-ci-test@workspace:.":
   version: 0.0.0-use.local
-  resolution: "yarn-ci-test@workspace:."
+  resolution: "@chiranjib-infosys/yarn-ci-test@workspace:."
   languageName: unknown
   linkType: soft
