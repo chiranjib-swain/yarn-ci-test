@@ -58,6 +58,12 @@ jobs:
           echo "Publishing version: $NEW_VERSION"
           npm version "$NEW_VERSION" --no-git-tag-version
 
+      # ✅ Explicitly configure Yarn to use OIDC/ID token
+      - name: Configure Yarn for OIDC
+        run: |
+          yarn config set 'npmRegistries["https://registry.npmjs.org"].npmAuthType' "oidc"
+          yarn config set 'npmRegistries["https://registry.npmjs.org"].npmAlwaysAuth' true
+
       # ✅ Publish using Yarn (OIDC works via setup-node)
       - name: Publish to npm (OIDC)
         run: yarn npm publish --access public
