@@ -24,8 +24,10 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "yarn"
 
-      - name: Enable Corepack (Yarn)
-        run: corepack enable
+      - name: Enable Corepack + activate Yarn
+        run: |
+           corepack enable
+           corepack prepare yarn@4.1.1 --activate
 
       - name: Install dependencies
         run: yarn install --immutable
