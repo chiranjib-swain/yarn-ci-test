@@ -72,4 +72,4 @@ jobs:
 
       # ✅ Publish using Yarn (OIDC works via setup-node)
       - name: Publish to npm (OIDC)
-        run: yarn npm publish --provenance
+        run: yarn npm publish
