@@ -66,6 +66,11 @@ jobs:
             yarn config set npmAuthToken $NPM_AUTH_TOKEN
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+       # ✅ Install
+      - run: yarn install --no-immutable
+
+
       # ✅ Publish using Yarn (OIDC works via setup-node)
       - name: Publish to npm
         run: |
