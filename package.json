@@ -1,5 +1,5 @@
 {
-  "name": "yarn-ci-test",
+  "name": "@chiranjib-infosys/yarn-ci-test",
   "version": "1.0.0",
   "description": "A test project for Yarn CI",
   "main": "index.js",
