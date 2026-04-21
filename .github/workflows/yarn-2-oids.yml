@@ -70,7 +70,5 @@ jobs:
 
       # ✅ Publish using Yarn (OIDC works via setup-node)
       - name: Publish to npm
-        env:
-            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-            yarn npm publish --access public
+            NODE_AUTH_TOKEN=$NODE_AUTH_TOKEN yarn npm publish --access public
