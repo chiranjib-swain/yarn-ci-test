@@ -38,6 +38,7 @@ jobs:
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
+          scope: "@chiranjib-infosys"
           cache: yarn
 
 
@@ -64,11 +65,11 @@ jobs:
           npm version "$NEW_VERSION" --no-git-tag-version
 
       # ✅ Bridge auth for Yarn
-      - name: Configure Yarn auth
-        env:
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-            echo "npmAuthToken: ${NPM_TOKEN}" >> .yarnrc.yml
+    #   - name: Configure Yarn auth
+    #     env:
+    #         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    #     run: |
+    #         echo "npmAuthToken: ${NPM_TOKEN}" >> .yarnrc.yml
 
       # ✅ Publish using Yarn (OIDC works via setup-node)
       - name: Publish to npm (OIDC)
