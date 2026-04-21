@@ -59,19 +59,18 @@ jobs:
           echo "Publishing version: $NEW_VERSION"
           npm version "$NEW_VERSION" --no-git-tag-version
 
-      - name: Configure npmjs registry auth
-        run: |
-            yarn config set npmRegistryServer "https://registry.npmjs.org"
-            yarn config set npmAlwaysAuth true
-            yarn config set npmAuthToken $NPM_AUTH_TOKEN
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-       # ✅ Install
-      - run: yarn install --no-immutable
+    #   - name: Configure npmjs registry auth
+    #     run: |
+    #         yarn config set npmRegistryServer "https://registry.npmjs.org"
+    #         yarn config set npmAlwaysAuth true
+    #         yarn config set npmAuthToken $NPM_AUTH_TOKEN
+    #     env:
+    #       NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 
       # ✅ Publish using Yarn (OIDC works via setup-node)
       - name: Publish to npm
+        env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-         yarn npm publish
+            yarn npm publish --access public
