@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   group: npm-publish
@@ -38,6 +39,6 @@ jobs:
         continue-on-error: true
 
       - name: Publish to npm
-        env:
-            YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # env:
+        #     YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: yarn npm publish --access public
