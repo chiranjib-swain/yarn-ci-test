@@ -40,6 +40,8 @@ jobs:
           registry-url: "https://registry.npmjs.org/"
           # Intentionally NOT providing node-auth-token
           # We want OIDC, but setup-node will inject a fake token anyway
+      - name: "install latest npm"
+        run: npm install -g npm@latest
 
       - name: "RESULT — NODE_AUTH_TOKEN status"
         run: |
