@@ -91,7 +91,7 @@ jobs:
           echo "NODE_AUTH_TOKEN is: ${NODE_AUTH_TOKEN:-<empty>}"
           echo "Expected: auth failure because NODE_AUTH_TOKEN is set to fake value."
           echo ""
-          npm publish --provenance --access public --dry-run 2>&1 || true
+          npm publish --provenance --access public  2>&1 || true
           echo ""
           echo "---- Publish attempt complete ----"
         # env:
