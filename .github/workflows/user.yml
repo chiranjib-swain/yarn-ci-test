@@ -34,14 +34,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "Setup Node.js — actions/setup-node@v4"
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org/"
           # Intentionally NOT providing node-auth-token
           # We want OIDC, but setup-node will inject a fake token anyway
-      - name: "install latest npm"
-        run: npm install -g npm@latest
 
       - name: "RESULT — NODE_AUTH_TOKEN status"
         run: |
