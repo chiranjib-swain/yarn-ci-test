@@ -35,3 +35,4 @@ jobs:
       env:
           # Clear the sentinel value setup-node
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
