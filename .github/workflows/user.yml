@@ -20,7 +20,7 @@ jobs:
         corepack enable
         corepack prepare yarn@2.4.3 --activate
         yarn --version
-        
+
     - name: Use Node.js 24
       uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
       with:
@@ -32,5 +32,6 @@ jobs:
     
     - name: Publish
       run: yarn npm publish
-      # env:
-      #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} 
+      env:
+          # Clear the sentinel value setup-node
+          NODE_AUTH_TOKEN: ""
