@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
 
 
-# permissions:
+permissions:
 #   id-token: write # Required for OIDC
-#   contents: read
+  contents: read
 
 jobs:
   publish:
