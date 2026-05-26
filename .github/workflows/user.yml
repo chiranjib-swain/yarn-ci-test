@@ -39,7 +39,7 @@ jobs:
     #   run: npm publish --provenance
     
     - name: Publish
-      run: yarn npm publish --access public --provenance
+      run: yarn npm publish --access public
       env:
         NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Required for npm publish, but not for authentication with OIDC
     #     # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Required for npm publish, but not for authentication with OIDC
