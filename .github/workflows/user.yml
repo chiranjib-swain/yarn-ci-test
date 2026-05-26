@@ -22,8 +22,8 @@ jobs:
         yarn --version
 
     - name: Use Node.js 24
-      # uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
-      uses: actions/setup-node@v5
+      uses: Satishchoudhary94/setup-node@fix/oidc-support-1440
+      # uses: actions/setup-node@v5
       with:
         node-version: "24"
         registry-url: "https://registry.npmjs.org"
@@ -37,3 +37,5 @@ jobs:
     
     - name: Publish
       run: yarn npm publish --access public
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Required for npm publish, but not for authentication with OIDC
